@@ -260,3 +260,8 @@ curl "http://localhost:4000/api/export/csv?payment_type=insurance" -o visits.csv
 - [x] Navigation bar with active states
 - [x] 13 example SQL queries (joins, GROUP BY/HAVING, subqueries, CTEs, windows)
 - [x] Monorepo structure with clear README setup instructions
+
+---
+
+## Conclusion
+A data-driven dashboard that collects and analyzes patient-reported hospital waiting times to identify service bottlenecks and improve healthcare delivery. Adding a conclusion section to the report.
