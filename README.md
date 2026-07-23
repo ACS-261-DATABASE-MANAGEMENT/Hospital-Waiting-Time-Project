@@ -145,6 +145,156 @@ Open **http://localhost:5173** in your browser.
 | `GET` | `/api/export/csv` | Download filtered visits as CSV |
 
 ---
+///
+UNF
+PatientID
+PatientName
+Doctor
+Department
+AppointmentDate
+ArrivalTime
+ConsultationStart
+WaitingMinutes
+Rating
+1
+John Mwangi
+Dr. Kim
+Outpatient
+2026-07-20
+08:00
+08:40
+40
+5
+
+1NF
+AppointmentID
+PatientID
+PatientName
+DoctorID
+DoctorName
+Department
+AppointmentDate
+ArrivalTime
+ConsultationStart
+WaitingMinutes
+Rating
+101
+1
+John Mwangi
+1
+Dr. Kim
+Outpatient
+2026-07-20
+08:00
+08:40
+40
+5
+
+2NF - Patients
+PatientID
+FullName
+Gender
+Phone
+Email
+1
+John Mwangi
+Male
+0711111111
+john@example.com
+
+2NF - Doctors
+DoctorID
+FullName
+DepartmentID
+1
+Dr. Kim
+1
+
+2NF - Appointments
+AppointmentID
+PatientID
+DoctorID
+AppointmentDate
+Status
+101
+1
+1
+2026-07-20
+Completed
+
+3NF - Departments
+DepartmentID
+DepartmentName
+1
+Outpatient
+2
+Emergency
+
+3NF - Patients
+PatientID
+FullName
+Gender
+DateOfBirth
+Phone
+Email
+1
+John Mwangi
+Male
+2002-04-15
+0711111111
+john@example.com
+
+3NF - Doctors
+DoctorID
+FullName
+Specialization
+DepartmentID
+1
+Dr. Kim
+General Medicine
+1
+
+3NF - Appointments
+AppointmentID
+PatientID
+DoctorID
+AppointmentDate
+AppointmentTime
+Status
+101
+1
+1
+2026-07-20
+08:30
+Completed
+
+3NF - WaitingTimes
+WaitingID
+AppointmentID
+ArrivalTime
+ConsultationStart
+WaitingMinutes
+1
+101
+08:00
+08:40
+40
+
+3NF - Feedback
+FeedbackID
+PatientID
+WaitingID
+Rating
+Comments
+1
+1
+1
+5
+
+
+
+
+
 
 ## 🗄️ Database Schema
 
