@@ -10,6 +10,8 @@ const EMPTY_FORM = {
   department_id: '',
   visit_date: new Date().toISOString().slice(0, 10),
   payment_type: 'cash',
+  medication_status: 'received',
+  medication_name: '',
   arrival_time: '',
   consultation_called_time: '',
   consultation_end_time: '',
@@ -29,7 +31,7 @@ function minsLabel(mins) {
   return `${h}h ${m}m`;
 }
 
-export default function ReportForm() {
+export default function ReportForm({ theme, onToggleTheme }) {
   const [form, setForm]           = useState(EMPTY_FORM);
   const [facilities, setFacilities] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -71,11 +73,14 @@ export default function ReportForm() {
     if (!times.arrival)       return 'Please enter your arrival time.';
     if (!times.called)        return 'Please enter consultation call time.';
     if (!times.end)           return 'Please enter consultation end time.';
-    if (!times.medication)    return 'Please enter medication received time.';
+    if (form.medication_status === 'received') {
+      if (!form.medication_name) return 'Please specify the medication received.';
+      if (!times.medication)     return 'Please enter medication received time.';
+      if (times.medication < times.end) return 'Medication time must be after consultation end.';
+    }
     if (form.satisfaction_rating === 0) return 'Please provide a satisfaction rating.';
     if (times.called <= times.arrival)  return 'Consultation call must be after arrival.';
     if (times.end   <= times.called)    return 'Consultation end must be after call time.';
-    if (times.medication < times.end)   return 'Medication time must be after consultation end.';
     return null;
   };
 
@@ -88,6 +93,10 @@ export default function ReportForm() {
 
     setSubmitting(true);
     try {
+      const medicationReceivedTime = form.medication_status === 'received'
+        ? toISO(form.visit_date, times.medication)
+        : toISO(form.visit_date, times.end);
+
       const payload = {
         ...form,
         facility_id:              parseInt(form.facility_id),
@@ -96,7 +105,9 @@ export default function ReportForm() {
         arrival_time:             toISO(form.visit_date, times.arrival),
         consultation_called_time: toISO(form.visit_date, times.called),
         consultation_end_time:    toISO(form.visit_date, times.end),
-        medication_received_time: toISO(form.visit_date, times.medication),
+        medication_received_time: medicationReceivedTime,
+        medication_status:        form.medication_status,
+        medication_name:          form.medication_status === 'received' ? form.medication_name : 'Not given',
       };
       const res = await submitVisit(payload);
       setResult(res.data);
@@ -166,11 +177,23 @@ export default function ReportForm() {
   return (
     <div className="page animate-in">
       <div className="page-header" style={{ textAlign: 'center', marginBottom: 'var(--gap-xl)' }}>
-        <h1>Submit a Visit Report</h1>
-        <p>Help improve healthcare in the Lukenya area by sharing your wait time experience.</p>
-        <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.8rem', marginTop: 4 }}>
-          Your report is anonymous — no personal information is stored.
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--gap-md)', flexWrap: 'wrap' }}>
+          <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
+            <h1>Submit a Visit Report</h1>
+            <p>Help improve healthcare in the Lukenya area by sharing your wait time experience.</p>
+            <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.8rem', marginTop: 4 }}>
+              Your report is anonymous — no personal information is stored.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onToggleTheme}
+            style={{ whiteSpace: 'nowrap' }}
+          >
+            {theme === 'light' ? '🌙 Switch to dark mode' : '☀️ Switch to light mode'}
+          </button>
+        </div>
       </div>
 
       <form className="form-card" onSubmit={handleSubmit} noValidate>
@@ -282,19 +305,63 @@ export default function ReportForm() {
               onChange={(e) => handleTimeChange('end', e.target.value)}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="medication_time">Medication Received</label>
-            <input
-              id="medication_time"
-              type="time"
-              value={times.medication}
-              onChange={(e) => handleTimeChange('medication', e.target.value)}
-            />
+          <div className="form-group full">
+            <label>Medication Status</label>
+            <div className="radio-group">
+              <label className={`radio-label${form.medication_status === 'received' ? ' selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="medication_status"
+                  value="received"
+                  checked={form.medication_status === 'received'}
+                  onChange={() => set('medication_status', 'received')}
+                />
+                Medication received
+              </label>
+              <label className={`radio-label${form.medication_status === 'not_given' ? ' selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="medication_status"
+                  value="not_given"
+                  checked={form.medication_status === 'not_given'}
+                  onChange={() => set('medication_status', 'not_given')}
+                />
+                No medication given
+              </label>
+            </div>
           </div>
+          {form.medication_status === 'received' ? (
+            <>
+              <div className="form-group full">
+                <label htmlFor="medication_name">Medication Given</label>
+                <input
+                  id="medication_name"
+                  type="text"
+                  placeholder="E.g. Paracetamol, Amoxicillin"
+                  value={form.medication_name}
+                  onChange={(e) => set('medication_name', e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="medication_time">Medication Received</label>
+                <input
+                  id="medication_time"
+                  type="time"
+                  value={times.medication}
+                  onChange={(e) => handleTimeChange('medication', e.target.value)}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="form-group full" style={{ color: 'var(--clr-text-dim)', fontSize: '0.95rem' }}>
+              <label>No medication was given during this visit.</label>
+              <p style={{ margin: 0 }}>The report will record consultation end time as the final step.</p>
+            </div>
+          )}
         </div>
 
         {/* Live wait preview */}
-        {times.arrival && times.medication && times.medication > times.arrival && (
+        {(times.arrival && times.end && form.medication_status === 'received' && times.medication && times.medication > times.arrival) && (
           <div style={{
             background: 'rgba(59,130,246,0.08)',
             border: '1px solid rgba(59,130,246,0.2)',
@@ -308,6 +375,22 @@ export default function ReportForm() {
             <span>🩺 <strong>Consult:</strong> {times.end && times.called ? `${Math.round((new Date(`1970-01-01T${times.end}`) - new Date(`1970-01-01T${times.called}`)) / 60000)} min` : '—'}</span>
             <span>💊 <strong>Pharmacy:</strong> {times.medication && times.end ? `${Math.round((new Date(`1970-01-01T${times.medication}`) - new Date(`1970-01-01T${times.end}`)) / 60000)} min` : '—'}</span>
             <span style={{ color: 'var(--clr-accent)' }}>📊 <strong>Total:</strong> {`${Math.round((new Date(`1970-01-01T${times.medication}`) - new Date(`1970-01-01T${times.arrival}`)) / 60000)} min`}</span>
+          </div>
+        )}
+        {(times.arrival && times.end && form.medication_status === 'not_given') && (
+          <div style={{
+            background: 'rgba(59,130,246,0.08)',
+            border: '1px solid rgba(59,130,246,0.2)',
+            borderRadius: 'var(--radius-md)',
+            padding: 'var(--gap-md)',
+            marginTop: 'var(--gap-md)',
+            display: 'flex', gap: 'var(--gap-lg)', flexWrap: 'wrap',
+            fontSize: '0.85rem',
+          }}>
+            <span>⏱ <strong>Triage:</strong> {times.called && times.arrival ? `${Math.round((new Date(`1970-01-01T${times.called}`) - new Date(`1970-01-01T${times.arrival}`)) / 60000)} min` : '—'}</span>
+            <span>🩺 <strong>Consult:</strong> {times.end && times.called ? `${Math.round((new Date(`1970-01-01T${times.end}`) - new Date(`1970-01-01T${times.called}`)) / 60000)} min` : '—'}</span>
+            <span>💊 <strong>Pharmacy:</strong> 0 min</span>
+            <span style={{ color: 'var(--clr-accent)' }}>📊 <strong>Total:</strong> {`${Math.round((new Date(`1970-01-01T${times.end}`) - new Date(`1970-01-01T${times.arrival}`)) / 60000)} min`}</span>
           </div>
         )}
 
