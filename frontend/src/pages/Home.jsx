@@ -31,92 +31,78 @@ const features = [
 export default function Home() {
   return (
     <div className="page animate-in">
-      {/* Hero */}
-      <div style={{
-        textAlign: 'center',
-        padding: 'var(--gap-2xl) 0 var(--gap-xl)',
-        maxWidth: 720,
-        margin: '0 auto',
-      }}>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 'var(--gap-sm)',
-          background: 'rgba(59,130,246,0.1)',
-          border: '1px solid rgba(59,130,246,0.3)',
-          borderRadius: 99,
-          padding: '4px 16px',
-          fontSize: '0.78rem',
-          fontWeight: 700,
-          color: 'var(--clr-primary)',
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          marginBottom: 'var(--gap-lg)',
-        }}>
-          🇰🇪 Lukenya Area · ACS-261 CGD Project
-        </div>
-        <h1 style={{ fontSize: '2.8rem', lineHeight: 1.15, marginBottom: 'var(--gap-md)' }}>
-          Hospital Wait Time<br />
-          <span style={{
-            background: 'linear-gradient(90deg, var(--clr-primary), var(--clr-accent))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>
-            Transparency Platform
-          </span>
-        </h1>
-        <p style={{ fontSize: '1rem', maxWidth: 540, margin: '0 auto var(--gap-xl)' }}>
-          A citizen-generated data system for tracking and analysing patient wait times at
-          Lukenya, Athi River, Mlolongo, Mavoko, and Katani health facilities.
-        </p>
-        <div style={{ display: 'flex', gap: 'var(--gap-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link to="/report" className="btn btn-primary" id="hero-report-btn" style={{ fontSize: '0.95rem', padding: '10px 28px' }}>
-            📋 Submit a Report
-          </Link>
-          <Link to="/dashboard" className="btn btn-secondary" id="hero-dashboard-btn" style={{ fontSize: '0.95rem', padding: '10px 28px' }}>
-            📊 View Dashboard
-          </Link>
-        </div>
-      </div>
-
-      {/* Feature cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: 'var(--gap-lg)',
-        marginTop: 'var(--gap-2xl)',
-      }}>
-        {features.map((f) => (
-          <div key={f.path} className="card" style={{ textAlign: 'center', cursor: 'default' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--gap-md)' }}>{f.icon}</div>
-            <h3 style={{ marginBottom: 'var(--gap-sm)', color: f.color }}>{f.title}</h3>
-            <p style={{ marginBottom: 'var(--gap-lg)', fontSize: '0.875rem' }}>{f.desc}</p>
-            <Link to={f.path} className="btn btn-secondary" style={{ borderColor: f.color, color: f.color }}>
-              {f.cta} →
+      <section className="home-hero">
+        <div className="home-hero-badge">🇰🇪 Eneo la Lukenya</div>
+        <div className="home-hero-copy">
+          <p className="home-hero-eyebrow">Ripoti za muda wa kusubiri zinazosababishwa na jamii</p>
+          <h1>
+            Hospital wait time <br />
+            <span>transparency platform</span>
+          </h1>
+          <p className="home-hero-text">
+            Mfumo wa data wa wananchi kwa kufuatilia na kuchambua muda wa kusubiri kwa wagonjwa katika
+            vituo vya afya vya Lukenya. Shiriki uzoefu wako wa ziara kwa siri ili kusaidia kuboresha huduma.
+          </p>
+          <div className="home-hero-actions">
+            <Link to="/report" className="btn btn-primary home-hero-btn">
+              📋 Submit a Report
+            </Link>
+            <Link to="/dashboard" className="btn btn-secondary home-hero-btn">
+              📊 View Dashboard
             </Link>
           </div>
-        ))}
-      </div>
+        </div>
+      </section>
 
-      {/* Stats strip */}
-      <div style={{
-        display: 'flex', flexWrap: 'wrap', gap: 'var(--gap-lg)',
-        justifyContent: 'center', marginTop: 'var(--gap-2xl)',
-        paddingTop: 'var(--gap-xl)',
-        borderTop: '1px solid var(--clr-border)',
-      }}>
+      <section className="home-feature-grid">
+        {features.map((f) => (
+          <article key={f.path} className="feature-card">
+            <div className="feature-icon" style={{ color: f.color }}>{f.icon}</div>
+            <div>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+            </div>
+            <Link to={f.path} className="btn btn-secondary feature-link" style={{ borderColor: f.color, color: f.color }}>
+              {f.cta} →
+            </Link>
+          </article>
+        ))}
+      </section>
+
+      <section className="home-stats-grid">
         {[
-          ['5', 'Health Facilities'],
-          ['11', 'Departments Tracked'],
-          ['155+', 'Seed Reports'],
-          ['100%', 'Anonymous'],
-        ].map(([val, lbl]) => (
-          <div key={lbl} style={{ textAlign: 'center', minWidth: 100 }}>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--clr-primary)' }}>{val}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--clr-text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{lbl}</div>
+          ['5', 'Health facilities'],
+          ['11', 'Departments tracked'],
+          ['155+', 'Seed reports'],
+          ['100%', 'Anonymous reporting'],
+        ].map(([value, label]) => (
+          <div key={label} className="home-stat-card">
+            <div className="home-stat-value">{value}</div>
+            <div className="home-stat-label">{label}</div>
           </div>
         ))}
-      </div>
+      </section>
+
+      <section className="home-how-it-works">
+        <h2>How it works</h2>
+        <div className="home-step-grid">
+          <article className="step-card">
+            <div className="step-badge">1</div>
+            <h4>Submit your visit</h4>
+            <p>Record arrival, consultation and medication times so the community can understand service speed.</p>
+          </article>
+          <article className="step-card">
+            <div className="step-badge">2</div>
+            <h4>Track wait data</h4>
+            <p>View aggregated analytics for facilities and departments to see where care is improving.</p>
+          </article>
+          <article className="step-card">
+            <div className="step-badge">3</div>
+            <h4>Drive better care</h4>
+            <p>Use shared data to support faster, more transparent service delivery in the community.</p>
+          </article>
+        </div>
+      </section>
     </div>
   );
 }
