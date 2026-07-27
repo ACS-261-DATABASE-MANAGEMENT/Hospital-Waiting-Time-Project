@@ -8,7 +8,7 @@ A full-stack web application that lets patients anonymously submit structured ti
 ---
 
 ## 🗺️ Project Structure
-
+ 
 ```
 Hospital-Waiting-Time-Project/
 ├── backend/
@@ -55,7 +55,7 @@ Hospital-Waiting-Time-Project/
 
 ---
 
-## ⚙️ Prerequisites
+## ⚙️ All Prerequisites
 
 - **PostgreSQL** 14+ (`psql` in PATH)
 - **Node.js** 18+ and npm 9+
