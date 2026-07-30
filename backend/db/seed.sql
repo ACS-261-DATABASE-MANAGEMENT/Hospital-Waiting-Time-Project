@@ -10,6 +10,7 @@
 -- FACILITIES
 -- ============================================================
 INSERT INTO facilities (name, location, area, facility_type) VALUES
+('Daystar University Clinic',     'Daystar University, Athi River', 'Athi River',   'clinic'),
 ('Lukenya Mission Hospital',      'Lukenya, off Mombasa Road',     'Lukenya',      'hospital'),
 ('Athi River Health Centre',      'Athi River Town, Machakos Rd',  'Athi River',   'health_centre'),
 ('Mlolongo Medical Clinic',       'Mlolongo, along Mombasa Rd',    'Mlolongo',     'clinic'),

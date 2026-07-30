@@ -34,11 +34,12 @@ export default function Navbar({ theme, onToggleTheme }) {
           </NavLink>
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-secondary btn-icon"
             onClick={onToggleTheme}
             style={{ marginLeft: '12px' }}
+            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
           >
-            {theme === 'light' ? '🌙 Dark mode' : '☀️ Light mode'}
+            {theme === 'light' ? '🌙' : '☀️'}
           </button>
         </div>
       </div>

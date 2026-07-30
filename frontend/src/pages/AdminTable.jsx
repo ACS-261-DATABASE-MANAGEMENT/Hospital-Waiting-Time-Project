@@ -9,6 +9,10 @@ import { Stars } from '../components/StarRating';
 const STATUS_OPTIONS = ['', 'submitted', 'under_review', 'flagged_duplicate', 'resolved'];
 
 export default function AdminTable() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const [visits,     setVisits]     = useState([]);
   const [facilities, setFacilities] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
@@ -92,19 +96,59 @@ export default function AdminTable() {
   if (filters.payment_type) exportParams.payment_type = filters.payment_type;
   if (filters.status)       exportParams.status       = filters.status;
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (passwordInput === 'admin123') {
+      setIsAuthenticated(true);
+    } else {
+      setLoginError('Incorrect password. (Hint: try admin123)');
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="page animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <form className="form-card" onSubmit={handleLogin} style={{ maxWidth: '400px', width: '100%', padding: 'var(--gap-2xl)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'var(--gap-xl)' }}>
+            <span style={{ fontSize: '3rem' }}>🔐</span>
+            <h2 style={{ marginBottom: 'var(--gap-sm)' }}>Admin Access</h2>
+            <p className="section-desc" style={{ color: 'var(--clr-text-dim)', fontSize: '0.9rem' }}>
+              Enter the administrator password to view and manage citizen records.
+            </p>
+          </div>
+          <div className="form-group" style={{ marginBottom: 'var(--gap-lg)' }}>
+            <input
+              type="password"
+              placeholder="Enter password..."
+              value={passwordInput}
+              onChange={(e) => { setPasswordInput(e.target.value); setLoginError(''); }}
+              autoFocus
+            />
+          </div>
+          {loginError && <p style={{ color: 'var(--clr-danger)', fontSize: '0.85rem', marginBottom: 'var(--gap-md)', textAlign: 'center', fontWeight: 'bold' }}>{loginError}</p>}
+          <button type="submit" className="btn btn-primary btn-full">Login to Console</button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--gap-md)' }}>
-          <div>
-            <h1>🛠 Admin — Visit Reports</h1>
-            <p>Review, filter, and manage all submitted patient visit reports.</p>
+      <div className="page-header" style={{ marginBottom: 'var(--gap-xl)', paddingBottom: 'var(--gap-lg)', borderBottom: '1px solid var(--clr-border)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--gap-md)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gap-md)' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '14px', background: 'var(--clr-surface-alt)', border: '1px solid var(--clr-border)', fontSize: '1.8rem' }}>🛠</div>
+            <div>
+              <h1 style={{ fontSize: '1.8rem', letterSpacing: '-0.02em', marginBottom: '4px' }}>Admin Console</h1>
+              <p style={{ margin: 0, color: 'var(--clr-text-dim)', fontSize: '0.95rem' }}>Review, filter, and manage all submitted visit reports.</p>
+            </div>
           </div>
           <a
             href={getExportURL(exportParams)}
             target="_blank"
             rel="noreferrer"
-            className="btn btn-secondary"
+            className="btn btn-primary"
+            style={{ borderRadius: '99px', boxShadow: '0 4px 12px rgba(37,99,235,0.2)' }}
             id="export-csv-btn"
           >
             📥 Export CSV
@@ -216,11 +260,14 @@ export default function AdminTable() {
                       disabled={updating === v.visit_id}
                       onChange={(e) => handleStatusChange(v.visit_id, e.target.value)}
                       style={{
-                        background: 'var(--clr-bg)', border: '1px solid var(--clr-border)',
+                        background: 'var(--clr-surface-alt)', border: '2px solid transparent',
                         borderRadius: 'var(--radius-sm)', color: 'var(--clr-text)',
-                        fontSize: '0.78rem', padding: '3px 6px', cursor: 'pointer',
+                        fontSize: '0.8rem', padding: '6px 8px', cursor: 'pointer', outline: 'none',
+                        transition: 'all var(--tr-fast)',
                         opacity: updating === v.visit_id ? 0.5 : 1,
                       }}
+                      onFocus={(e) => { e.target.style.borderColor = 'var(--clr-primary)'; e.target.style.background = 'var(--clr-surface)'; }}
+                      onBlur={(e) => { e.target.style.borderColor = 'transparent'; e.target.style.background = 'var(--clr-surface-alt)'; }}
                       aria-label={`Update status for visit ${v.visit_id}`}
                     >
                       {STATUS_OPTIONS.filter(Boolean).map((s) => (

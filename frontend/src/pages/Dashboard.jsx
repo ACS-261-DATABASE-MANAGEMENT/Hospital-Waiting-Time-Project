@@ -89,9 +89,9 @@ export default function Dashboard() {
 
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <h1>📊 Waiting Time Dashboard</h1>
-        <p>Real-time analytics from citizen-submitted wait time reports across Lukenya-area facilities.</p>
+      <div className="page-header" style={{ textAlign: 'center', marginBottom: 'var(--gap-2xl)' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: 'var(--gap-sm)' }}>📊 Analytics Dashboard</h1>
+        <p style={{ fontSize: '1.1rem' }}>Real-time wait time insights across Lukenya-area facilities.</p>
       </div>
 
       {/* KPI Cards */}
@@ -225,7 +225,9 @@ export default function Dashboard() {
 
       {/* Facility Ranking Table */}
       <div className="card" style={{ marginBottom: 'var(--gap-xl)' }}>
-        <h3 style={{ marginBottom: 'var(--gap-md)' }}>🏆 Facility Rankings — Longest Average Wait</h3>
+        <h3 style={{ marginBottom: 'var(--gap-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          🏆 Facility Rankings — Longest Average Wait
+        </h3>
         <div className="table-wrapper">
           <table>
             <thead>
@@ -262,7 +264,9 @@ export default function Dashboard() {
 
       {/* By Department */}
       <div className="card">
-        <h3 style={{ marginBottom: 'var(--gap-md)' }}>🏛 Wait Times by Department</h3>
+        <h3 style={{ marginBottom: 'var(--gap-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          🏛 Wait Times by Department
+        </h3>
         <div className="table-wrapper">
           <table>
             <thead>

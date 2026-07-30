@@ -176,30 +176,23 @@ export default function ReportForm({ theme, onToggleTheme }) {
 
   return (
     <div className="page animate-in">
-      <div className="page-header" style={{ textAlign: 'center', marginBottom: 'var(--gap-xl)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--gap-md)', flexWrap: 'wrap' }}>
-          <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
-            <h1>Submit a Visit Report</h1>
-            <p>Help improve healthcare in the Lukenya area by sharing your wait time experience.</p>
-            <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.8rem', marginTop: 4 }}>
-              Your report is anonymous — no personal information is stored.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={onToggleTheme}
-            style={{ whiteSpace: 'nowrap' }}
-          >
-            {theme === 'light' ? '🌙 Switch to dark mode' : '☀️ Switch to light mode'}
-          </button>
-        </div>
+      <div className="page-header" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto var(--gap-2xl)' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '72px', height: '72px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--clr-primary), var(--clr-accent))', color: '#fff', fontSize: '2.2rem', marginBottom: 'var(--gap-md)', boxShadow: '0 8px 20px rgba(37,99,235,0.3)' }}>📝</div>
+        <h1 style={{ fontSize: '2.8rem', marginBottom: 'var(--gap-sm)', letterSpacing: '-0.02em' }}>Submit Visit Report</h1>
+        <p style={{ fontSize: '1.15rem', color: 'var(--clr-text-dim)' }}>Help improve healthcare in the Lukenya area by tracking your wait time.</p>
+        <p style={{ display: 'inline-block', padding: '6px 16px', background: 'rgba(34,197,94,0.1)', color: 'var(--clr-success)', borderRadius: '99px', fontSize: '0.85rem', fontWeight: '700', marginTop: 'var(--gap-md)' }}>
+          🔒 Anonymous submission
+        </p>
       </div>
 
       <form className="form-card" onSubmit={handleSubmit} noValidate>
         {/* Facility & Department */}
-        <div className="form-section" style={{ marginTop: 0, paddingTop: 0, borderTop: 'none' }}>
-          <h3>📍 Where did you visit?</h3>
+        <div className="form-section flex-header" style={{ marginTop: 0, paddingTop: 0, borderTop: 'none' }}>
+          <div className="section-icon blue">📍</div>
+          <div className="section-title">
+            <h3>Facility Details</h3>
+            <p className="section-desc">Where are you receiving care today?</p>
+          </div>
         </div>
         <div className="form-grid">
           <div className="form-group">
@@ -274,8 +267,12 @@ export default function ReportForm({ theme, onToggleTheme }) {
         </div>
 
         {/* Time pickers */}
-        <div className="form-section">
-          <h3>⏱️ When did each stage happen?</h3>
+        <div className="form-section flex-header" style={{ marginTop: 'var(--gap-xl)' }}>
+          <div className="section-icon purple">⏱️</div>
+          <div className="section-title">
+            <h3>Time Log</h3>
+            <p className="section-desc">When did each stage of your visit happen?</p>
+          </div>
         </div>
         <div className="form-grid">
           <div className="form-group">
@@ -395,8 +392,12 @@ export default function ReportForm({ theme, onToggleTheme }) {
         )}
 
         {/* Satisfaction */}
-        <div className="form-section">
-          <h3>⭐ How satisfied were you?</h3>
+        <div className="form-section flex-header" style={{ marginTop: 'var(--gap-lg)' }}>
+          <div className="section-icon orange">⭐</div>
+          <div className="section-title">
+            <h3>Overall Experience</h3>
+            <p className="section-desc">How satisfied were you with the service speed?</p>
+          </div>
         </div>
         <div className="form-group">
           <label>Overall Satisfaction (1 = very poor, 5 = excellent)</label>
